@@ -25,7 +25,7 @@ SECRET_KEY = 'k^d86*+k88n7mwk(%mqdr!g5*8)sj+%q+6_2vuk0r)kym!#wc5'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['mysite.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'social_django',
 ]
 
 MIDDLEWARE = [
@@ -123,6 +125,7 @@ STATIC_URL = '/static/'
 STATIC_DIR = os.path.join(BASE_DIR, 'static')
 STATICFILES_DIRS = [STATIC_DIR]
 
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
@@ -133,3 +136,14 @@ LOGOUT_URL = 'logout'
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'account.authentication.EmailAuthBackend',
+    'social_core.backends.vk.VKOAuth2',
+]
+
+SOCIAL_AUTH_VK_OAUTH2_KEY = '7294810'
+SOCIAL_AUTH_VK_OAUTH2_SECRET = '8Z28lqm7lEhod0SVQnAy'
+SOCIAL_AUTH_VK_OAUTH2_SCOPE = ['email']
