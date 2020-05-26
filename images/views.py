@@ -3,11 +3,14 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from .forms import ImageCreateForm
 from .models import Image
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
 
 # Create your views here.
 
 @login_required
 def image_create(request):
+    """Сохранение картинки в закладки на сайте"""
     if request.method == 'POST':
         form = ImageCreateForm(data=request.POST)
         if form.is_valid():
@@ -25,6 +28,26 @@ def image_create(request):
 
 
 def image_detail(request, id, slug):
+    """Страница с подробной информацией о картинке"""
     image = get_object_or_404(Image, id=id, slug=slug)
     return render(request, 'images/image/detail.html', {'section': 'images',
                                                         'image': image})
+
+
+@login_required
+@require_POST
+def image_like(request):
+    """Обработчик чтобы пользователи могли отмечать и снимать отметку 'LIKE'"""
+    image_id = request.POST.get('id')
+    action = request.POST.get('action')
+    if image_id and action:
+        try:
+            image = Image.objects.get(id=image_id)
+            if action == 'like':
+                image.users_like.add(request.user)
+            else:
+                image.users_like.remove(request.user)
+            return JsonResponse({'status': 'ok'})
+        except:
+            pass
+    return JsonResponse({'status': 'ok'})
