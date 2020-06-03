@@ -40,8 +40,8 @@ def image_create(request):
 def image_detail(request, id, slug):
     """Страница с подробной информацией о картинке"""
     image = get_object_or_404(Image, id=id, slug=slug)
-    total_views = r.incr('image:{}:views'.format(id))
-    r.zincrby('image_ranking', image.id, 1)
+    total_views = r.incr('image:{}:views'.format(image.id))
+    r.zincrby('image_ranking', 1, image.id)
     return render(request, 'images/image/detail.html', {'section': 'images',
                                                         'image': image,
                                                         'total_views': total_views})
